@@ -1,7 +1,9 @@
-<footer class="text-sm leading-6 mt-8 px-3">
-    <div class="pt-10 pb-28 border-t border-slate-200 sm:flex justify-between text-slate-500">
-        <div class="mb-6 sm:mb-0 sm:flex">
-            <p>Copyright © 2024.</p>
+<footer class="bg-gray-900 text-white py-12 mt-16">
+    <div class="container mx-auto px-6">
+        <!-- Copyright -->
+        <div class=" text-center text-gray-400">
+        <p class="text-sm">&copy; 2025 Plateforme Services Innovants. Tous droits réservés.</p>
+        <p class="text-sm">Créé pour optimiser le marché des services et générer de la valeur pour tous.</p>
         </div>
     </div>
 </footer>

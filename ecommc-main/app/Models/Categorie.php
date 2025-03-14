@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Article;
+use App\Models\Service;
 
 class Categorie extends Model
 {
@@ -14,8 +14,8 @@ class Categorie extends Model
         'nom_categorie',
     ];
 
-    public function articles()
+    public function service()
     {
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Service::class);
     }
 }

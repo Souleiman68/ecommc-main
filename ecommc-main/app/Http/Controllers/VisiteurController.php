@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Article;
+use App\Models\Service;
 use App\Models\Categorie;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,19 +12,20 @@ class VisiteurController extends Controller
 
     public function accueil()
     {
-        $HeroSectionImages = Article::all();
-        $articles = Article::orderBy('created_at', 'desc')->take(9)->get();
-        return view('visiteurs.accueil', compact('articles', 'HeroSectionImages'));
+        $HeroSectionImages = Service::all();
+        $services = Service::orderBy('created_at', 'desc')->take(9)->get();
+        $services = Service::all();
+        return view('visiteurs.accueil', compact('services', 'HeroSectionImages'));
     }
 
 
-    public function showArticle($id)
+    public function showService($id)
     {   
-        $article = Article::findOrFail($id);
-        $articles = Article::orderBy('created_at', 'desc')->take(6)->get();
-        return view('visiteurs.showArticle', [
-            'article' => $article,
-            'articles' => $articles
+        $Service = Service::findOrFail($id);
+        $services = Service::orderBy('created_at', 'desc')->take(6)->get();
+        return view('visiteurs.showService', [
+            'Service' => $Service,
+            'services' => $services
         ]);
     }
 
@@ -33,18 +34,18 @@ class VisiteurController extends Controller
         return view('visiteurs.categories');
     }
 
-    public function articles()
+    public function services()
     {
-        $articles = Article::orderBy('created_at', 'desc')->paginate(9);
-        return view('visiteurs.articles', compact('articles'));
+        $services = Service::orderBy('created_at', 'desc')->paginate(9);
+        return view('visiteurs.services', compact('services'));
     }
 
 
-    public function articlesByCategorie($id)
+    public function servicesByCategorie($id)
     {
-        $articles = Article::where('categorie_id', $id)->orderBy('created_at', 'desc')->get();
+        $services = Service::where('categorie_id', $id)->orderBy('created_at', 'desc')->get();
         $categorie = Categorie::findOrFail($id);
-        return view('visiteurs.ArticlesByCategorie', compact('articles', 'categorie'));
+        return view('visiteurs.servicesByCategorie', compact('services', 'categorie'));
     }
 
 }

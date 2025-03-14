@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Article;
+use App\Models\Service;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -17,8 +17,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::all();
-        return view('admin.articles.index', compact('articles'));
+        $service = Article::all();
+        return view('admin.service.index', compact('service'));
     }
 
     /**
@@ -27,7 +27,7 @@ class ArticleController extends Controller
     public function create()
     {
         $categories = Categorie::all();
-        return view('admin.articles.create', [
+        return view('admin.service.create', [
             'categories' => $categories
         ]);
     }
@@ -38,7 +38,7 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'titre' => 'required|string|max:255|unique:articles',
+            'titre' => 'required|string|max:255|unique:service',
             'contenu' => 'required|string',
             'prix' => 'required|numeric',
             'categorie_id' => 'required|exists:categories,id',
@@ -48,14 +48,14 @@ class ArticleController extends Controller
         // Chemin d'upload
         if ($request->hasFile('image')) {
             $imageName = time().'_'.$request->file('image')->getClientOriginalName();
-            $request->file('image')->move(public_path('assets/images/articles'), $imageName);
+            $request->file('image')->move(public_path('assets/images/service'), $imageName);
             $validatedData['image'] = $imageName;
         }
     
         // Création de l'article
         $article = Article::create($validatedData);
     
-        return redirect()->route('admin.articles.index')->with('success', 'L\'article a été publié avec succès.');
+        return redirect()->route('admin.service.index')->with('success', 'L\'article a été publié avec succès.');
     }
     
 
@@ -66,7 +66,7 @@ class ArticleController extends Controller
     public function edit(Article $article)
     {
         $categories = Categorie::all();
-        return view('admin.articles.edit', [
+        return view('admin.service.edit', [
             'article' => $article,
             'categories' => $categories
         ]);
@@ -78,7 +78,7 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         $validatedData = $request->validate([
-            'titre' => 'required|string|unique:articles,titre,' . $article->id,
+            'titre' => 'required|string|unique:service,titre,' . $article->id,
             'contenu' => 'required|string',
             'prix' => 'required|numeric',
             'categorie_id' => 'required|exists:categories,id',
@@ -89,19 +89,19 @@ class ArticleController extends Controller
         if ($request->hasFile('image')) {
             // Suppression de l'ancienne image si elle existe
             if ($article->image) {
-                File::delete(public_path('assets/images/articles/' . $article->image));
+                File::delete(public_path('assets/images/service/' . $article->image));
             }
     
             // Stockage de la nouvelle image dans le répertoire spécifié
             $imageName = time().'_'.$request->file('image')->getClientOriginalName();
-            $request->file('image')->move(public_path('assets/images/articles'), $imageName);
+            $request->file('image')->move(public_path('assets/images/service'), $imageName);
             $validatedData['image'] = $imageName;
         }
     
         // Mise à jour de l'article
         $article->update($validatedData);
     
-        return redirect()->route('admin.articles.index')->with('success', 'L\'article a été mis à jour avec succès.');
+        return redirect()->route('admin.service.index')->with('success', 'L\'article a été mis à jour avec succès.');
     
     }
 
@@ -113,13 +113,13 @@ class ArticleController extends Controller
         $article = Article::findOrFail($id);
         // Suppression de l'image du répertoire public
         if ($article->image) {
-            File::delete(public_path('assets/images/articles/' . $article->image));
+            File::delete(public_path('assets/images/service/' . $article->image));
         }
 
         // Suppression de l'article
         $article->delete();
 
-        return redirect()->route('admin.articles.index')->with('success', 'L\'article a été supprimé avec succès.');
+        return redirect()->route('admin.service.index')->with('success', 'L\'article a été supprimé avec succès.');
 
     }
     

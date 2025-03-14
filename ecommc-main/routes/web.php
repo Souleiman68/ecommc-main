@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 use App\Http\Controllers\Admin\CategorieController;
 use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\DashboardController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 // Routes publiques (accessibles sans authentification)
 Route::middleware('RedirectIfAuthenticated')->group(function () {
     Route::get('/', [VisiteurController::class, 'accueil'])->name('accueil');
+    Route::get('/service/{service}', [VisiteurController::class, 'showService'])->name('service.show');
     Route::get('/categories', [VisiteurController::class, 'categories'])->name('categories');
     Route::get('/articles', [VisiteurController::class, 'articles'])->name('articles');
     Route::get('/articles/{articles}', [VisiteurController::class, 'showArticle'])->name('show.article');
@@ -30,8 +32,16 @@ Route::middleware(['guest', 'prevent-back-history'])->group(function () {
 // Routes pour les utilisateurs authentifiés
 Route::middleware(['auth', 'prevent-back-history', 'RedirectIfNotAuthenticated'])->group(function () {
     Route::prefix('admin')->group(function () {
-        Route::get('dashboard', fn() => view('admin.dashboard'))->name('admin.dashboard');
+
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
         
+        Route::get('create', [AdminController::class, 'create'])->name('admin.create');
+
+        
+        Route::resource('services', ServiceController::class);
+        
+        //Route::get('dashboard', fn() => view('admin.dashboard'))->name('admin.dashboard');
+
         // Gestion des articles
         Route::get('articles', [ArticleController::class, 'index'])->name('admin.articles.index');
         Route::get('articles/create', [ArticleController::class, 'create'])->name('admin.articles.create');

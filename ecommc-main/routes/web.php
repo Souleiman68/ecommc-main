@@ -5,8 +5,9 @@ use App\Http\Controllers\VisiteurController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 use App\Http\Controllers\Admin\CategorieController;
-use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProviderController;
+use App\Http\Controllers\Admin\ServiceController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -34,22 +35,27 @@ Route::middleware(['auth', 'prevent-back-history', 'RedirectIfNotAuthenticated']
     Route::prefix('admin')->group(function () {
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-        
-        Route::get('create', [AdminController::class, 'create'])->name('admin.create');
-
-        
-        Route::resource('services', ServiceController::class);
-        
         //Route::get('dashboard', fn() => view('admin.dashboard'))->name('admin.dashboard');
 
-        // Gestion des articles
-        Route::get('articles', [ArticleController::class, 'index'])->name('admin.articles.index');
-        Route::get('articles/create', [ArticleController::class, 'create'])->name('admin.articles.create');
-        Route::post('articles/push', [ArticleController::class, 'store'])->name('admin.articles.store');
-        Route::get('articles/edit/{article}', [ArticleController::class, 'edit'])->name('admin.articles.edit');
-        Route::put('articles/{article}', [ArticleController::class, 'update'])->name('admin.articles.update');
-        Route::delete('articles/{id}', [ArticleController::class, 'destroy'])->name('admin.articles.destroy');
-
+        // Route pour créer un administrateur
+        Route::get('create', [AdminController::class, 'create'])->name('admin.create');
+       
+        // Routes pour les services
+        Route::get('services', [ServiceController::class, 'index'])->name('admin.services.index');
+        Route::get('services/create', [ServiceController::class, 'create'])->name('admin.services.create');
+        Route::post('services/store', [ServiceController::class, 'store'])->name('admin.services.store');
+        Route::get('services/{service}/edit', [ServiceController::class, 'edit'])->name('admin.services.edit');
+        Route::put('services/{service}', [ServiceController::class, 'update'])->name('admin.services.update');
+        Route::delete('services/{service}', [ServiceController::class, 'destroy'])->name('admin.services.destroy');
+        
+        // Routes pour les prestataires
+        Route::get('providers', [ProviderController::class, 'index'])->name('admin.providers.index');
+        Route::get('providers/create', [ProviderController::class, 'create'])->name('admin.providers.create');
+        Route::post('providers/store', [ProviderController::class, 'store'])->name('admin.providers.store');
+        Route::get('providers/{id}/edit', [ProviderController::class, 'edit'])->name('admin.providers.edit');
+        Route::put('providers/{provider}', [ProviderController::class, 'update'])->name('admin.providers.update');
+        Route::delete('providers/{id}', [ProviderController::class, 'destroy'])->name('admin.providers.destroy');
+       
         // Gestion des catégories
         Route::get('categories', [CategorieController::class, 'index'])->name('admin.categories.index');
         Route::get('categories/create', [CategorieController::class, 'create'])->name('admin.categories.create');
@@ -57,6 +63,8 @@ Route::middleware(['auth', 'prevent-back-history', 'RedirectIfNotAuthenticated']
         Route::get('categories/{id}/edit', [CategorieController::class, 'edit'])->name('admin.categories.edit');
         Route::put('categories/{categorie}', [CategorieController::class, 'update'])->name('admin.categories.update');
         Route::delete('categories/{id}', [CategorieController::class, 'destroy'])->name('admin.categories.destroy');
+               
+   
     });
 
     // Route de déconnexion

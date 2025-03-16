@@ -7,7 +7,8 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Styles -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="{{ asset('build/assets/app.js') }}"></script>
 </head>
 <body class="font-sans antialiased bg-gray-100">
     <div class="min-h-screen">
@@ -30,8 +31,8 @@
                             <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.*')">
                                 {{ __('Catégories') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('admin.articles.index')" :active="request()->routeIs('admin.articles.*')">
-                                {{ __('Articles') }}
+                            <x-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">
+                                {{ __('Services') }}
                             </x-nav-link>
                         </div>
                     </div>
@@ -49,10 +50,6 @@
                                 </button>
                             </x-slot>
                             <x-slot name="content">
-                                <!-- Ajouter un administrateur -->
-                                <!-- <x-dropdown-link :href="route('admin.create')">
-                                    {{ __('Ajouter un admin') }} -->
-                                </x-dropdown-link>
                                 <!-- Déconnexion -->
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf

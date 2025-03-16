@@ -26,67 +26,39 @@
 
       <!-- Statistiques -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Catégories -->
-        <div class="bg-gradient-to-r from-blue-100 to-blue-200 p-6 rounded-lg shadow-md">
-          <div class="flex items-center">
-            <div class="p-3 bg-blue-500 rounded-full">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-              </svg>
-            </div>
-            <div class="ml-4">
-              <p class="text-sm text-blue-700 font-medium">Catégories</p>
-              <p class="text-3xl font-bold text-blue-900">{{ $categoriesCount }}</p>
-            </div>
-          </div>
-        </div>
-
         <!-- Services -->
-        <div class="bg-gradient-to-r from-green-100 to-green-200 p-6 rounded-lg shadow-md">
-          <div class="flex items-center">
-            <div class="p-3 bg-green-500 rounded-full">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/>
-              </svg>
-            </div>
-            <div class="ml-4">
-              <p class="text-sm text-green-700 font-medium">Services</p>
-              <p class="text-3xl font-bold text-green-900">{{ $servicesCount }}</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Utilisateurs inscrits -->
-        <div class="bg-gradient-to-r from-yellow-100 to-yellow-200 p-6 rounded-lg shadow-md">
-          <div class="flex items-center">
-            <div class="p-3 bg-yellow-500 rounded-full">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 14a4 4 0 10-8 0M12 14v7"/>
-              </svg>
-            </div>
-            <div class="ml-4">
-              <p class="text-sm text-yellow-700 font-medium">Utilisateurs</p>
-              <p class="text-3xl font-bold text-yellow-900">{{ $usersCount }}</p>
+        <a href="{{ route('admin.services.index') }}" class="block">
+          <div class="bg-gradient-to-r from-blue-100 to-blue-200 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <div class="flex items-center">
+              <div class="p-3 bg-blue-500 rounded-full">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"/>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-blue-700 font-medium">Services</p>
+                <p class="text-3xl font-bold text-blue-900">{{ $servicesCount }}</p>
+              </div>
             </div>
           </div>
-        </div>
+        </a>
 
-        <!-- Dernière connexion -->
-        <div class="bg-gradient-to-r from-purple-100 to-purple-200 p-6 rounded-lg shadow-md">
+        <!-- Nombre de prestataires -->
+        <a href="{{ route('admin.providers.index') }}" class="block">
+        <div class="bg-gradient-to-r from-purple-100 to-purple-200 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
           <div class="flex items-center">
             <div class="p-3 bg-purple-500 rounded-full">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
               </svg>
             </div>
             <div class="ml-4">
-              <p class="text-sm text-purple-700 font-medium">Dernière connexion</p>
-              <p class="text-3xl font-bold text-purple-900">
-                {{ Auth::user()->last_login_at ? Auth::user()->last_login_at->diffForHumans() : 'N/A' }}
-              </p>
+              <p class="text-sm text-purple-700 font-medium">Prestataires</p>
+              <p class="text-3xl font-bold text-purple-900">{{ $providersCount }}</p>
             </div>
           </div>
         </div>
+      </a>
       </div>
     </div>
   </div>

@@ -2,32 +2,42 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
-    use HasFactory;
-
+    /**
+     * Les attributs qui sont mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
-        'titre', 
-        'contenu', 
-        'prix', 
-        'categorie_id', 
-        'image', 
-        'phone',
-        'location'
+        'titre',
+        'description',
+        'prix',
+        'categorie_id',
+        'provider_id',
+        'localisation',
+        'image',
     ];
 
+    /**
+     * Le prestataire qui offre ce service.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function provider()
+    {
+        return $this->belongsTo(Provider::class);
+    }
+
+    /**
+     * La catégorie à laquelle ce service appartient.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function categorie()
     {
         return $this->belongsTo(Categorie::class);
-    }
-
-    // Génère automatiquement le lien WhatsApp
-    public function getWhatsappLinkAttribute()
-    {
-        $message = urlencode("Bonjour, je suis intéressé par votre service : {$this->titre}");
-        return "https://wa.me/{$this->phone}?text={$message}";
     }
 }

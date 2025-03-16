@@ -1,9 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
-/* Custom CSS */
-
+/* Votre CSS personnalisé */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -20,7 +19,7 @@
 .hover-zoom:hover {
     transform: scale(1.03);
 }
-/* WhatsApp Button Animation */
+
 .whatsapp-float {
     position: fixed;
     bottom: 40px;

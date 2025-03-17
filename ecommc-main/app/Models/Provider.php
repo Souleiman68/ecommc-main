@@ -39,7 +39,7 @@ class Provider extends Model
      * @var array
      */
     protected $casts = [
-        'date_naissance' => 'date',
+        'date_naissance' => 'date', // Convertit la date de naissance en objet Carbon
     ];
 
     /**
@@ -49,7 +49,7 @@ class Provider extends Model
      */
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Categorie::class, 'category_provider');
+        return $this->belongsToMany(Categorie::class, 'category_provider', 'provider_id', 'categorie_id');
     }
 
     /**

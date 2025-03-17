@@ -39,7 +39,7 @@ class ProviderController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'nom_complet' => 'required|string|max:255',
             'date_naissance' => 'required|date',
             'lieu_naissance' => 'required|string|max:255',
@@ -47,21 +47,16 @@ class ProviderController extends Controller
             'telephone' => 'required|string|max:20',
             'whatsapp' => 'nullable|string|max:20',
             'description' => 'nullable|string',
-            'categories' => 'required|array',
+            'categories' => 'required|array', // Assurez-vous que 'categories' est un tableau
+            'categories.*' => 'exists:categories,id', // Vérifie que chaque ID de catégorie existe
         ]);
-
-        $provider = Provider::create($request->only([
-            'nom_complet',
-            'date_naissance',
-            'lieu_naissance',
-            'region_actuelle',
-            'telephone',
-            'whatsapp',
-            'description',
-        ]));
-
-        $provider->categories()->sync($request->categories);
-
+    
+        // Création du prestataire
+        $provider = Provider::create($validatedData);
+    
+        // Attachement des catégories
+        $provider->categories()->sync($request->input('categories'));
+    
         return redirect()->route('admin.providers.index')->with('success', 'Prestataire créé avec succès.');
     }
 
@@ -71,24 +66,12 @@ class ProviderController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function show($id)
+    public function showEdit(Provider $provider)
     {
-        $provider = Provider::with('categories', 'services')->findOrFail($id);
-        return view('admin.providers.show', compact('provider'));
+        $categories = Categorie::all(); // Assurez-vous d'importer le modèle Category
+        return view('admin.providers.show_edit', compact('provider', 'categories'));
     }
 
-    /**
-     * Affiche le formulaire de modification d'un prestataire.
-     *
-     * @param  int  $id
-     * @return \Illuminate\View\View
-     */
-    public function edit($id)
-    {
-        $provider = Provider::with('categories')->findOrFail($id);
-        $categories = Categorie::all();
-        return view('admin.providers.edit', compact('provider', 'categories'));
-    }
 
     /**
      * Met à jour un prestataire.
@@ -98,33 +81,34 @@ class ProviderController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nom_complet' => 'required|string|max:255',
-            'date_naissance' => 'required|date',
-            'lieu_naissance' => 'required|string|max:255',
-            'region_actuelle' => 'required|string|max:255',
-            'telephone' => 'required|string|max:20',
-            'whatsapp' => 'nullable|string|max:20',
-            'description' => 'nullable|string',
-            'categories' => 'required|array',
-        ]);
+{
+    $request->validate([
+        'nom_complet' => 'required|string|max:255',
+        'date_naissance' => 'required|date',
+        'lieu_naissance' => 'required|string|max:255',
+        'region_actuelle' => 'required|string|max:255',
+        'telephone' => 'required|string|max:20',
+        'whatsapp' => 'nullable|string|max:20',
+        'description' => 'nullable|string',
+        'categories' => 'required|array',
+    ]);
 
-        $provider = Provider::findOrFail($id);
-        $provider->update($request->only([
-            'nom_complet',
-            'date_naissance',
-            'lieu_naissance',
-            'region_actuelle',
-            'telephone',
-            'whatsapp',
-            'description',
-        ]));
+    $provider = Provider::findOrFail($id);
+    $provider->update($request->only([
+        'nom_complet',
+        'date_naissance',
+        'lieu_naissance',
+        'region_actuelle',
+        'telephone',
+        'whatsapp',
+        'description',
+    ]));
 
-        $provider->categories()->sync($request->categories);
+    // Synchronisation des catégories
+    $provider->categories()->sync($request->categories);
 
-        return redirect()->route('admin.providers.index')->with('success', 'Prestataire mis à jour avec succès.');
-    }
+    return redirect()->route('admin.providers.index')->with('success', 'Prestataire mis à jour avec succès.');
+}
 
     /**
      * Supprime un prestataire.

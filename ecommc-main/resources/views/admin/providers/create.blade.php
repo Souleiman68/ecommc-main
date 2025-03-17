@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot:title>
         {{ __('Créer un prestataire') }}
-    </x-slot>
+    </x-slot:title>
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-violet-100 leading-tight flex items-center">
@@ -108,7 +108,7 @@
                                 </svg>
                                 {{ __('Description') }}
                             </label>
-                            <input name="description" id="description" rows="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-200"></input>
+                            <textarea name="description" id="description" rows="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-200"></textarea>
                         </div>
 
                         <!-- Catégories -->
@@ -119,11 +119,14 @@
                                 </svg>
                                 {{ __('Catégories') }}
                             </label>
-                            <select name="categories[]" id="categories" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-200" multiple required>
+                            <div class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-200">
                                 @foreach ($categories as $categorie)
-                                    <option value="{{ $categorie->id }}">{{ $categorie->nom_categorie }}</option>
+                                    <div class="flex items-center mb-2">
+                                        <input type="checkbox" name="categories[]" id="categorie-{{ $categorie->id }}" value="{{ $categorie->id }}" class="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
+                                        <label for="categorie-{{ $categorie->id }}" class="ml-2 block text-sm text-gray-700">{{ $categorie->nom_categorie }}</label>
+                                    </div>
                                 @endforeach
-                            </select>
+                            </div>
                         </div>
 
                         <!-- Bouton de soumission -->

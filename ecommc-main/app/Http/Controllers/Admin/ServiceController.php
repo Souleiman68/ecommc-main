@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Service;
-use App\Models\Categorie;
 use App\Models\Provider;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,9 +13,16 @@ class ServiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $services = Service::all();
+        $search = $request->input('search');
+        $services = Service::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('titre', 'like', "%{$search}%")
+                             ->orWhere('localisation', 'like', "%{$search}%");
+            })
+            ->paginate(10); // Utilisez paginate au lieu de get
+
         return view('admin.services.index', compact('services'));
     }
 
@@ -25,11 +31,8 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        $categories = Categorie::all();
-         // Récupérer tous les prestataires
         $providers = Provider::all();
         return view('admin.services.create', [
-            'categories' => $categories,
             'providers' => $providers
         ]);
     }
@@ -40,10 +43,9 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'titre' => 'required|string|max:255|unique:services',
-            'description' => 'required|string',
+            'titre' => 'required|string|max:255',
+            'description' => 'nullable|string', // Description non obligatoire
             'prix' => 'required|numeric',
-            'categorie_id' => 'required|exists:categories,id',
             'provider_id' => 'required|exists:providers,id',
             'localisation' => 'required|string',
             'image' => 'required|image|mimes:jpeg,png,jpg',
@@ -67,11 +69,9 @@ class ServiceController extends Controller
      */
     public function edit(Service $service)
     {
-        $categories = Categorie::all();
-        $providers = Provider::all(); // Assurez-vous d'importer le modèle Provider
+        $providers = Provider::all();
         return view('admin.services.edit', [
             'service' => $service,
-            'categories' => $categories,
             'providers' => $providers
         ]);
     }
@@ -83,9 +83,8 @@ class ServiceController extends Controller
     {
         $validatedData = $request->validate([
             'titre' => 'required|string|unique:services,titre,' . $service->id,
-            'description' => 'required|string',
+            'description' => 'nullable|string', // Description non obligatoire
             'prix' => 'required|numeric',
-            'categorie_id' => 'required|exists:categories,id',
             'provider_id' => 'required|exists:providers,id',
             'localisation' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',

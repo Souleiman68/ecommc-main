@@ -14,31 +14,52 @@
                     <x-nav-link :href="route('accueil')" :active="request()->routeIs('accueil')">
                         {{ __('Accueil') }}
                     </x-nav-link>
-                    {{-- Uncomment these when ready --}}
-                    {{-- 
-                    <x-nav-link :href="route('services')" :active="request()->routeIs('services')">
+                    <x-nav-link :href="route('admin.services.index')" :active="request()->routeIs('services')">
                         {{ __('Services') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('prestataires')" :active="request()->routeIs('prestataires')">
+                    <x-nav-link :href="route('admin.providers.index')" :active="request()->routeIs('prestataires')">
                         {{ __('Prestataires') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
-                        {{ __('Contact') }}
+                    <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('categories')">
+                        {{ __('Catégories') }}
                     </x-nav-link>
-                    --}}
                 </div>
             </div>
 
             <!-- Login Icon (Right) -->
             <div class="hidden sm:flex items-center">
-                <a href="{{ route('login') }}" class="text-gray-500 hover:text-gray-700 transition">
-                    <!-- User Icon - Better looking -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M5.121 17.804A9.953 9.953 0 0112 15c2.21 0 4.243.714 5.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0zM19.428 15.341A9.97 9.97 0 0021 12c0-5.523-4.477-10-10-10S1 6.477 1 12c0 2.107.652 4.057 1.758 5.656" />
-                    </svg>
-                </a>
+                @auth
+                    <!-- Menu utilisateur -->
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none transition duration-150 ease-in-out">
+                                <div>{{ Auth::user()->username }}</div>
+                                <div class="ml-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
+                        <x-slot name="content">
+                            <!-- Déconnexion -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    {{ __('Déconnexion') }}
+                                </button>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                @else
+                    <!-- Lien de connexion -->
+                    <a href="{{ route('login') }}" class="text-gray-500 hover:text-gray-700 transition">
+                        <!-- User Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A9.953 9.953 0 0112 15c2.21 0 4.243.714 5.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0zM19.428 15.341A9.97 9.97 0 0021 12c0-5.523-4.477-10-10-10S1 6.477 1 12c0 2.107.652 4.057 1.758 5.656" />
+                        </svg>
+                    </a>
+                @endauth
             </div>
 
             <!-- Mobile Hamburger -->
@@ -64,24 +85,29 @@
             <x-responsive-nav-link :href="route('accueil')" :active="request()->routeIs('accueil')">
                 {{ __('Accueil') }}
             </x-responsive-nav-link>
-
-            {{-- Uncomment these when needed --}}
-            {{--
-            <x-responsive-nav-link :href="route('services')" :active="request()->routeIs('services')">
+            <x-responsive-nav-link :href="route('admin.services.index')" :active="request()->routeIs('services')">
                 {{ __('Services') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('prestataires')" :active="request()->routeIs('prestataires')">
+            <x-responsive-nav-link :href="route('admin.providers.index')" :active="request()->routeIs('prestataires')">
                 {{ __('Prestataires') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
-                {{ __('Contact') }}
-            </x-responsive-nav-link>
-            --}}
+            <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('categories')">
+                {{ __('Catégories') }}
+            </x-nav-link>
 
             <!-- Mobile Login Link -->
-            <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')">
-                {{ __('Connexion') }}
-            </x-responsive-nav-link>
+            @auth
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                        {{ __('Déconnexion') }}
+                    </x-responsive-nav-link>
+                </form>
+            @else
+                <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')">
+                    {{ __('Connexion') }}
+                </x-responsive-nav-link>
+            @endauth
         </div>
     </div>
 </nav>

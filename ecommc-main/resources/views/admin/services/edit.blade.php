@@ -45,17 +45,6 @@
                             <input type="text" name="titre" id="titre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-200" value="{{ $service->titre }}" required>
                         </div>
 
-                        <!-- Description du service -->
-                        <div class="mb-6">
-                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
-                                </svg>
-                                {{ __('Description') }}
-                            </label>
-                            <textarea name="description" id="description" rows="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-200" required>{{ $service->description }}</textarea>
-                        </div>
-
                         <!-- Prix du service -->
                         <div class="mb-6">
                             <label for="prix" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
@@ -67,21 +56,6 @@
                             <input type="number" name="prix" id="prix" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-200" value="{{ $service->prix }}" required>
                         </div>
 
-                        <!-- Catégorie du service -->
-                        <div class="mb-6">
-                            <label for="categorie_id" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"></path>
-                                </svg>
-                                {{ __('Catégorie') }}
-                            </label>
-                            <select name="categorie_id" id="categorie_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-200" required>
-                                <option value="">{{ __('Choisissez une catégorie') }}</option>
-                                @foreach ($categories as $categorie)
-                                    <option value="{{ $categorie->id }}" @selected($service->categorie_id == $categorie->id)>{{ $categorie->nom_categorie }}</option>
-                                @endforeach
-                            </select>
-                        </div>
 
                         <!-- Prestataire du service -->
                         <div class="mb-6">
@@ -120,6 +94,17 @@
                                 {{ __('Image') }}
                             </label>
                             <input type="file" name="image" id="image" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-200" accept="image/*">
+                        </div>
+
+                        <!-- Description du service -->
+                        <div class="mb-6">
+                            <label for="description" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                                </svg>
+                                {{ __('Description') }}
+                            </label>
+                            <textarea name="description" id="description" rows="5" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-2 focus:ring-green-200" required>{{ $service->description }}</textarea>
                         </div>
 
                         <!-- Aperçu de l'image actuelle -->

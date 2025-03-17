@@ -59,12 +59,6 @@
             </div>
             
             <div class="p-6">
-              <div class="flex items-center gap-2 mb-3">
-                <span class="inline-block px-3 py-1 bg-pink-100 text-pink-600 rounded-full text-sm font-medium border border-pink-200">
-                  {{ $service->categorie->nom_categorie }}
-                </span>
-              </div>
-              
               <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $service->titre }}</h3>
               
               <div class="flex items-center text-gray-600 mb-4">

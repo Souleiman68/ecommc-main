@@ -15,7 +15,6 @@ class Service extends Model
         'titre',
         'description',
         'prix',
-        'categorie_id',
         'provider_id',
         'localisation',
         'image',
@@ -31,13 +30,14 @@ class Service extends Model
         return $this->belongsTo(Provider::class);
     }
 
-    /**
-     * La catégorie à laquelle ce service appartient.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function categorie()
-    {
-        return $this->belongsTo(Categorie::class);
-    }
+    // Supprimez cette méthode
+    // /**
+    //  * La catégorie à laquelle ce service appartient.
+    //  *
+    //  * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+    //  */
+    // public function categorie()
+    // {
+    //     return $this->belongsTo(Categorie::class);
+    // }
 }

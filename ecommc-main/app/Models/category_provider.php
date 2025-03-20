@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateCategoryProviderTable extends Migration
 {
-    /**
-     * Exécute la migration.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('category_provider', function (Blueprint $table) {
@@ -28,11 +23,6 @@ class CreateCategoryProviderTable extends Migration
         });
     }
 
-    /**
-     * Annule la migration.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('category_provider');

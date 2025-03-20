@@ -14,15 +14,16 @@ use Illuminate\Support\Facades\Route;
 
 
 
-
 // Routes publiques (accessibles sans authentification)
 Route::middleware('RedirectIfAuthenticated')->group(function () {
     Route::get('/', [VisiteurController::class, 'accueil'])->name('accueil');
     Route::get('/service/{service}', [VisiteurController::class, 'showService'])->name('service.show');
     Route::get('/categories', [VisiteurController::class, 'categories'])->name('categories');
+    Route::get('/categorie/services/{categorie}', [VisiteurController::class, 'servicesByCategorie'])->name('services.byCategory');
     Route::get('/articles', [VisiteurController::class, 'articles'])->name('articles');
-    Route::get('/articles/{articles}', [VisiteurController::class, 'showArticle'])->name('show.article');
+    Route::get('/articles/{article}', [VisiteurController::class, 'showArticle'])->name('show.article');
     Route::get('/categorie/articles/{categorie}', [VisiteurController::class, 'articlesByCategorie'])->name('articles.by.categorie');
+    Route::get('/categorie/services/{categorie}', [VisiteurController::class, 'servicesByCategorie'])->name('services.byCategory');
 });
 
 // Routes pour les invités (non connectés)

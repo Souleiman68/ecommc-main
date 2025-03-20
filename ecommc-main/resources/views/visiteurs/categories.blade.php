@@ -1,51 +1,45 @@
 <x-principale-layout>
-
     <x-slot:title>
-        {{ __('Categories') }}
+        {{ __('Catégories') }}
     </x-slot:title>
 
-    <div class="py-6 sm:py-8 lg:py-12">
-        <div class="mx-auto max-w-screen-2xl px-4 md:px-8">
-            <div class="mb-4 flex items-center justify-between gap-8 sm:mb-8 md:mb-12">
-                <h2 class="text-2xl font-bold text-black lg:text-3xl">Catégories</h2>
+    <div class="py-12 sm:py-16 lg:py-20 bg-gray-50">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Titre de la section -->
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-indigo-800 sm:text-4xl lg:text-5xl">
+                    Nos Catégories
+                </h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                    Découvrez nos catégories de services pour trouver exactement ce dont vous avez besoin.
+                </p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 xl:gap-8 my-8">
-                <!-- Catégorie 1 - Start -->
-                <a href="#"
-                    class="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-80">
-                    <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?auto=format&q=75&fit=crop&w=600" loading="lazy" alt="Photo par Minh Pham" class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
-                    <span class="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">VR</span>
-                </a>
-                <!-- Catégorie 1 - End -->
+            <!-- Grille des catégories -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach ($categories as $categorie)
+                    <a href="{{ route('services.byCategory', $categorie->id) }}" 
+                       class="group relative flex h-64 items-end overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition duration-300">
+                        <!-- Image de la catégorie (par défaut) -->
+                        <img src="{{ asset('assets/images/categories/category-' . $loop->iteration . '.jpg') }}" 
+                             alt="{{ $categorie->nom_categorie }}" 
+                             class="absolute inset-0 h-full w-full object-cover object-center transition duration-300 group-hover:scale-110"
+                             loading="lazy">
+                        
+                        <!-- Overlay sombre -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
 
-                <!-- Catégorie 2 - Start -->
-                <a href="#"
-                    class="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:col-span-2 md:h-80">
-                    <img src="https://images.unsplash.com/photo-1542759564-7ccbb6ac450a?auto=format&q=75&fit=crop&w=1000" loading="lazy" alt="Photo par Magicle" class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
-                    <span class="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">Tech</span>
-                </a>
-                <!-- Catégorie 2 - End -->
-
-                <!-- Catégorie 3 - Start -->
-                <a href="#"
-                    class="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:col-span-2 md:h-80">
-                    <img src="https://images.unsplash.com/photo-1610465299996-30f240ac2b1c?auto=format&q=75&fit=crop&w=1000" loading="lazy" alt="Photo par Martin Sanchez" class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
-                    <span class="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">Dev</span>
-                </a>
-                <!-- Catégorie 3 - End -->
-
-                <!-- Catégorie 4 - Start -->
-                <a href="#"
-                    class="group relative flex h-48 items-end overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-80">
-                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&q=75&fit=crop&w=600" loading="lazy" alt="Photo par Lorenzo Herrera" class="absolute inset-0 h-full w-full object-cover object-center transition duration-200 group-hover:scale-110" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
-                    <span class="relative ml-4 mb-3 inline-block text-sm text-white md:ml-5 md:text-lg">Rétro</span>
-                </a>
-                <!-- Catégorie 4 - End -->
+                        <!-- Contenu de la catégorie -->
+                        <div class="relative p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">
+                                {{ $categorie->nom_categorie }}
+                            </h3>
+                            <p class="text-sm text-gray-200">
+                                {{ $categorie->services()->count() }} services disponibles
+                            </p>
+                        </div>
+                    </a>
+                @endforeach
             </div>
         </div>
     </div>

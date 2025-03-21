@@ -77,28 +77,30 @@ class ServiceController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Service $service)
-    {
-        $validatedData = $request->validate([
-            'titre' => 'required|string|unique:services,titre,' . $service->id,
-            'description' => 'nullable|string', // Description non obligatoire
-            'prix' => 'required|numeric',
-            'provider_id' => 'required|exists:providers,id',
-            'localisation' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
+ * Update the specified resource in storage.
+ */
+public function update(Request $request, Service $service)
+{
+    // Validation des données
+    $validatedData = $request->validate([
+        'titre' => 'required|string|max:255',
+        'description' => 'required|string',
+        'prix' => 'required|numeric|min:0',
+        'provider_id' => 'required|exists:providers,id',
+        'localisation' => 'required|string|max:255',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        // Gestion de l'upload de l'image et suppression de l'ancienne si elle existe
+    try {
+        // Gestion de l'image
         if ($request->hasFile('image')) {
-            // Suppression de l'ancienne image si elle existe
-            if ($service->image) {
-                File::delete(public_path('assets/images/services/' . $service->image));
+            // Suppression de l'ancienne image
+            if ($service->image && file_exists(public_path('assets/images/services/' . $service->image))) {
+                unlink(public_path('assets/images/services/' . $service->image));
             }
 
-            // Stockage de la nouvelle image dans le répertoire spécifié
-            $imageName = time().'_'.$request->file('image')->getClientOriginalName();
+            // Upload de la nouvelle image
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
             $request->file('image')->move(public_path('assets/images/services'), $imageName);
             $validatedData['image'] = $imageName;
         }
@@ -106,8 +108,25 @@ class ServiceController extends Controller
         // Mise à jour du service
         $service->update($validatedData);
 
-        return redirect()->route('admin.services.index')->with('success', 'Le service a été mis à jour avec succès.');
+        return redirect()
+            ->route('admin.services.index')
+            ->with('success', 'Service mis à jour avec succès');
+
+    } catch (\Exception $e) {
+        // Log l'erreur
+        \Log::error('Erreur lors de la mise à jour du service: ' . $e->getMessage());
+
+        // Si une nouvelle image a été uploadée mais qu'il y a eu une erreur
+        if (isset($imageName) && file_exists(public_path('assets/images/services/' . $imageName))) {
+            unlink(public_path('assets/images/services/' . $imageName));
+        }
+
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with('error', 'Une erreur est survenue lors de la mise à jour du service');
     }
+}
 
     /**
      * Remove the specified resource from storage.

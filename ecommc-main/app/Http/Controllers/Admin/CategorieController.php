@@ -5,82 +5,139 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CategorieController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $categories = Categorie::all();
-        return view('admin.categories.index', compact('categories'));
+        try {
+            $categories = Categorie::withCount('services')
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+            
+            return view('admin.categories.index', compact('categories'));
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Erreur lors du chargement des catégories : ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('admin.categories.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'nom_categorie' => 'required|string|max:255|unique:categories',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'nom_categorie' => 'required|string|max:255|unique:categories',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
 
-        $categorie = Categorie::create($validatedData);
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '_' . Str::slug($request->nom_categorie) . '.' . $image->getClientOriginalExtension();
+                
+                // Création du dossier s'il n'existe pas
+                $path = public_path('assets/images/categories');
+                if (!File::isDirectory($path)) {
+                    File::makeDirectory($path, 0777, true, true);
+                }
 
-        return redirect()->route('admin.categories.index')->with('success', 'Catégorie créée avec succès.');
+                // Déplacement et redimensionnement de l'image
+                $image->move($path, $imageName);
+                $validatedData['image'] = $imageName;
+            }
+
+            Categorie::create($validatedData);
+
+            return redirect()->route('admin.categories.index')
+                ->with('success', 'Catégorie créée avec succès.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Erreur lors de la création de la catégorie : ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+    public function edit(Categorie $categorie)
     {
-        $categorie = Categorie::findOrFail($id);
-        return view('admin.categories.edit', compact('categorie'));
+        try {
+            return view('admin.categories.edit', compact('categorie'));
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Erreur lors du chargement de la catégorie : ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Categorie $categorie)
     {
-        $request->validate([
-            'nom_categorie' => 'required|string|max:255|unique:categories,nom_categorie,' . $categorie->id,
-        ]);
-    
-        $categorie->update([
-            'nom_categorie' => $request->nom_categorie,
+        try {
+            $validatedData = $request->validate([
+                'nom_categorie' => 'required|string|max:255|unique:categories,nom_categorie,' . $categorie->id,
+                'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
 
-        ]);
-    
-        return redirect()->route('admin.categories.index')->with('success', 'Catégorie mise à jour avec succès.');
+            if ($request->hasFile('image')) {
+                // Suppression de l'ancienne image
+                if ($categorie->image) {
+                    $oldImagePath = public_path('assets/images/categories/' . $categorie->image);
+                    if (File::exists($oldImagePath)) {
+                        File::delete($oldImagePath);
+                    }
+                }
+
+                // Upload de la nouvelle image
+                $image = $request->file('image');
+                $imageName = time() . '_' . Str::slug($request->nom_categorie) . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('assets/images/categories'), $imageName);
+                $validatedData['image'] = $imageName;
+            }
+
+            $categorie->update($validatedData);
+
+            return redirect()->route('admin.categories.index')
+                ->with('success', 'Catégorie mise à jour avec succès.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Erreur lors de la mise à jour de la catégorie : ' . $e->getMessage());
+        }
     }
-    
-    
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
-        $categorie = Categorie::findOrFail($id);
-        
         try {
+            $categorie = Categorie::findOrFail($id);
+
+            // Vérification si la catégorie a des services associés
+            if ($categorie->services()->count() > 0) {
+                return redirect()->back()
+                    ->with('error', 'Impossible de supprimer cette catégorie car elle contient des services.');
+            }
+
+            // Suppression de l'image
+            if ($categorie->image) {
+                $imagePath = public_path('assets/images/categories/' . $categorie->image);
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+            }
+
             $categorie->delete();
-    
-            return redirect()->route('admin.categories.index')->with('success', 'Catégorie supprimée avec succès.');
+
+            return redirect()->route('admin.categories.index')
+                ->with('success', 'Catégorie supprimée avec succès.');
+
         } catch (\Exception $e) {
-            return redirect()->route('admin.categories.index')->with('error', 'Erreur lors de la suppression de la catégorie.');
+            return redirect()->back()
+                ->with('error', 'Erreur lors de la suppression de la catégorie : ' . $e->getMessage());
         }
     }
 }

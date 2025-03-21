@@ -16,14 +16,27 @@ use Illuminate\Support\Facades\Route;
 
 // Routes publiques (accessibles sans authentification)
 Route::middleware('RedirectIfAuthenticated')->group(function () {
-    Route::get('/', [VisiteurController::class, 'accueil'])->name('accueil');
-    Route::get('/service/{service}', [VisiteurController::class, 'showService'])->name('service.show');
-    Route::get('/categories', [VisiteurController::class, 'categories'])->name('categories');
-    Route::get('/categorie/services/{categorie}', [VisiteurController::class, 'servicesByCategorie'])->name('services.byCategory');
-    Route::get('/articles', [VisiteurController::class, 'articles'])->name('articles');
-    Route::get('/articles/{article}', [VisiteurController::class, 'showArticle'])->name('show.article');
-    Route::get('/categorie/articles/{categorie}', [VisiteurController::class, 'articlesByCategorie'])->name('articles.by.categorie');
-    Route::get('/categorie/services/{categorie}', [VisiteurController::class, 'servicesByCategorie'])->name('services.byCategory');
+    // Page d'accueil
+    Route::get('/', [VisiteurController::class, 'accueil'])
+        ->name('accueil');
+    
+    // Liste des services
+    Route::get('/services', [VisiteurController::class, 'services'])
+        ->name('services');
+    
+    // Détails d'un service
+    Route::get('/service/{id}', [VisiteurController::class, 'showService'])
+        ->name('service.show')
+        ->where('id', '[0-9]+');
+    
+    // Liste des catégories
+    Route::get('/categories', [VisiteurController::class, 'categories'])
+        ->name('categories');
+    
+    // Services par catégorie
+    Route::get('/categorie/{id}/services', [VisiteurController::class, 'servicesByCategorie'])
+        ->name('services.byCategory')
+        ->where('id', '[0-9]+');
 });
 
 // Routes pour les invités (non connectés)
@@ -65,10 +78,10 @@ Route::middleware(['auth', 'prevent-back-history', 'RedirectIfNotAuthenticated']
         Route::get('categories', [CategorieController::class, 'index'])->name('admin.categories.index');
         Route::get('categories/create', [CategorieController::class, 'create'])->name('admin.categories.create');
         Route::post('categories/store', [CategorieController::class, 'store'])->name('admin.categories.store');
-        Route::get('categories/{id}/edit', [CategorieController::class, 'edit'])->name('admin.categories.edit');
+        Route::get('categories/{categorie}/edit', [CategorieController::class, 'edit'])->name('admin.categories.edit'); // Modifié
         Route::put('categories/{categorie}', [CategorieController::class, 'update'])->name('admin.categories.update');
         Route::delete('categories/{id}', [CategorieController::class, 'destroy'])->name('admin.categories.destroy');
-               
+
    
     });
 

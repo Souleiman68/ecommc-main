@@ -99,23 +99,24 @@ class VisiteurController extends Controller
      * Display services for a specific category.
      */
     public function servicesByCategorie($id)
-    {
-        try {
-            $categorie = Categorie::findOrFail($id);
-            $services = Service::whereHas('categories', function($query) use ($id) {
-                $query->where('categories.id', $id);
-            })
-            ->with('provider')  // Eager load provider relationship
-            ->latest()
-            ->paginate(12);
-    
-            return view('visiteurs.ServiceByCategorie', [
-                'categorie' => $categorie,
-                'services' => $services
-            ]);
-        } catch (\Exception $e) {
-            return redirect()->route('categories')
-                ->with('error', 'Catégorie non trouvée');
-        }
+{
+    try {
+        $categorie = Categorie::findOrFail($id);
+        
+        // Récupérer les services via les prestataires de la catégorie
+        $services = Service::whereIn('provider_id', function($query) use ($id) {
+            $query->select('provider_id')
+                  ->from('category_provider')
+                  ->where('categorie_id', $id);
+        })
+        ->with('provider')
+        ->latest()
+        ->paginate(12);
+
+        return view('visiteurs.ServiceByCategorie', compact('services', 'categorie'));
+    } catch (\Exception $e) {
+        return redirect()->route('categories')
+            ->with('error', 'Catégorie non trouvée');
     }
+}
 }

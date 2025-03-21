@@ -65,10 +65,10 @@ Route::middleware(['auth', 'prevent-back-history', 'RedirectIfNotAuthenticated']
         Route::get('categories', [CategorieController::class, 'index'])->name('admin.categories.index');
         Route::get('categories/create', [CategorieController::class, 'create'])->name('admin.categories.create');
         Route::post('categories/store', [CategorieController::class, 'store'])->name('admin.categories.store');
-        Route::get('categories/{id}/edit', [CategorieController::class, 'edit'])->name('admin.categories.edit');
+        Route::get('categories/{categorie}/edit', [CategorieController::class, 'edit'])->name('admin.categories.edit'); // Modifié
         Route::put('categories/{categorie}', [CategorieController::class, 'update'])->name('admin.categories.update');
         Route::delete('categories/{id}', [CategorieController::class, 'destroy'])->name('admin.categories.destroy');
-               
+
    
     });
 
